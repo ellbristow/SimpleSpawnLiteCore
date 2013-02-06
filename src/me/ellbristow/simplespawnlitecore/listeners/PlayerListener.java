@@ -10,11 +10,11 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
-public class TeleportListener implements Listener {
+public class PlayerListener implements Listener {
     
     private SimpleSpawnLiteCore plugin;
     
-    public TeleportListener(SimpleSpawnLiteCore instance) {
+    public PlayerListener(SimpleSpawnLiteCore instance) {
         plugin = instance;
     }
     

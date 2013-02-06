@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import me.ellbristow.simplespawnlitecore.events.SimpleSpawnChangeLocationEvent;
 import me.ellbristow.simplespawnlitecore.events.SimpleSpawnTeleportEvent;
+import me.ellbristow.simplespawnlitecore.listeners.PlayerListener;
 import me.ellbristow.simplespawnlitecore.utils.Metrics;
+import me.ellbristow.simplespawnlitecore.utils.Metrics.Graph;
+import me.ellbristow.simplespawnlitecore.utils.Metrics.Plotter;
 import me.ellbristow.simplespawnlitecore.utils.SQLBridge;
 import org.bukkit.*;
 import org.bukkit.command.Command;
@@ -17,8 +20,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class SimpleSpawnLiteCore extends JavaPlugin {
 
     private FileConfiguration config;
-    private SimpleSpawnLiteCore plugin = this;
-    private SQLBridge sql;
+    private static SimpleSpawnLiteCore plugin;
+    public SQLBridge sql;
     private int teleportEffect;
     private int teleportSound;
     private boolean useTeleportEffect;
@@ -36,7 +39,7 @@ public class SimpleSpawnLiteCore extends JavaPlugin {
         
         Player player = (Player) sender;
         
-        if (commandLabel.equalsIgnoreCase("setspawn")) {
+        if (commandLabel.equalsIgnoreCase("setspawn") || commandLabel.equalsIgnoreCase("ssetspawn")) {
             if (args.length == 0) {
                 if (!player.hasPermission("simplespawn.set")) {
                     player.sendMessage(ChatColor.RED + "You do not have permission to set the spawn location!");
@@ -65,7 +68,7 @@ public class SimpleSpawnLiteCore extends JavaPlugin {
                 return false;
             }
 
-        } else if (commandLabel.equalsIgnoreCase("spawn")) {
+        } else if (commandLabel.equalsIgnoreCase("spawn") || commandLabel.equalsIgnoreCase("sspawn")) {
             if (args.length == 0) {
                 if (!player.hasPermission("simplespawn.use")) {
                     player.sendMessage(ChatColor.RED + "You do not have permission to use that command!");
@@ -230,7 +233,7 @@ public class SimpleSpawnLiteCore extends JavaPlugin {
         location.getWorld().setSpawnLocation((int) x, (int) y, (int) z);
     }
 
-    private Location getWorldSpawn(String world) {
+    public Location getWorldSpawn(String world) {
         HashMap<Integer, HashMap<String, Object>> result = sql.select("x, y, z, yaw, pitch", "WorldSpawns", "world = '" + world + "'", null, null);
         Location location;
         if (result == null || result.isEmpty()) {
@@ -247,6 +250,9 @@ public class SimpleSpawnLiteCore extends JavaPlugin {
         return location;
     }
     
+    public static SimpleSpawnLiteCore getPluginLink() {
+        return plugin;
+    }
     
     @Override
     public void onDisable() {
@@ -255,6 +261,8 @@ public class SimpleSpawnLiteCore extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        
+        plugin = this;
         
         config = getConfig();
         
@@ -274,8 +282,10 @@ public class SimpleSpawnLiteCore extends JavaPlugin {
         config.set("sound_effect_type", teleportSound);
         
         saveConfig();
+        
+        getServer().getPluginManager().registerEvents(new PlayerListener(plugin), plugin);
                 
-        sql = new SQLBridge(plugin);
+        sql = new SQLBridge(this);
         sql.getConnection();
         
         if (!sql.checkTable("WorldSpawns")) {
@@ -289,6 +299,77 @@ public class SimpleSpawnLiteCore extends JavaPlugin {
         
         try {
             Metrics metrics = new Metrics(this);
+            Graph graph = metrics.createGraph("Enabled Modules");
+            if (getServer().getPluginManager().getPlugin("SimpleSpawnLite-Home") != null) {
+                graph.addPlotter(new Plotter("SimpleSpawnLite-Home"){
+
+                    @Override
+                    public int getValue() {
+                        return 1;
+                    }
+
+                });
+            }
+            if (getServer().getPluginManager().getPlugin("SimpleSpawnLite-Back") != null) {
+                graph.addPlotter(new Plotter("SimpleSpawnLite-Back"){
+
+                    @Override
+                    public int getValue() {
+                        return 1;
+                    }
+
+                });
+            }
+            if (getServer().getPluginManager().getPlugin("SimpleSpawnLite-Work") != null) {
+                graph.addPlotter(new Plotter("SimpleSpawnLite-Work"){
+
+                    @Override
+                    public int getValue() {
+                        return 1;
+                    }
+
+                });
+            }
+            if (getServer().getPluginManager().getPlugin("SimpleSpawnLite-Jail") != null) {
+                graph.addPlotter(new Plotter("SimpleSpawnLite-Jail"){
+
+                    @Override
+                    public int getValue() {
+                        return 1;
+                    }
+
+                });
+            }
+            if (getServer().getPluginManager().getPlugin("SimpleSpawnLite-TpTo") != null) {
+                graph.addPlotter(new Plotter("SimpleSpawnLite-TpTo"){
+
+                    @Override
+                    public int getValue() {
+                        return 1;
+                    }
+
+                });
+            }
+            if (getServer().getPluginManager().getPlugin("SimpleSpawnLite-Eco") != null) {
+                graph.addPlotter(new Plotter("SimpleSpawnLite-Eco"){
+
+                    @Override
+                    public int getValue() {
+                        return 1;
+                    }
+
+                });
+            }
+            if (getServer().getPluginManager().getPlugin("SimpleSpawnLite-DynMap") != null) {
+                graph.addPlotter(new Plotter("SimpleSpawnLite-DynMap"){
+
+                    @Override
+                    public int getValue() {
+                        return 1;
+                    }
+
+                });
+            }
             metrics.start();
         } catch (IOException e) {
             // Failed to submit the stats :-(

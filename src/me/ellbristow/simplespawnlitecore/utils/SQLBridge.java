@@ -3,25 +3,22 @@ package me.ellbristow.simplespawnlitecore.utils;
 import java.io.File;
 import java.sql.*;
 import java.util.HashMap;
-import org.bukkit.plugin.Plugin;
+import me.ellbristow.simplespawnlitecore.SimpleSpawnLiteCore;
 
 public class SQLBridge {
 
-    private static Plugin plugin;
+    private static SimpleSpawnLiteCore plugin;
     private Connection conn;
     private File sqlFile;
     private Statement statement;
     private HashMap<Integer, HashMap<String, Object>> rows = new HashMap<Integer, HashMap<String, Object>>();
     private int numRows = 0;
     
-    public SQLBridge (Plugin instance) {
+    public SQLBridge (SimpleSpawnLiteCore instance) {
         plugin = instance;
-        sqlFile = new File(plugin.getDataFolder() + File.separator + plugin.getName() + ".db");
-    }
-    
-    public SQLBridge (Plugin instance, String dbName) {
-        plugin = instance;
-        sqlFile = new File(plugin.getDataFolder() + File.separator + dbName + ".db");
+        File sqlDir = new File(plugin.getDataFolder().getParentFile().getPath() + File.separator + "SimpleSpawnLite");
+        if (!sqlDir.exists()) sqlDir.mkdir();
+        sqlFile = new File(plugin.getDataFolder().getParentFile().getPath() + File.separator + "SimpleSpawnLite" + File.separator + "SimpleSpawnLite.db");
     }
     
     public synchronized Connection getConnection() {
@@ -32,7 +29,6 @@ public class SQLBridge {
     }
     
     public synchronized Connection open() {    	
-    	plugin.getLogger().finest("sqlite connection needs to be established");
         try {
             conn = DriverManager.getConnection("jdbc:sqlite:" + sqlFile.getAbsolutePath());
             return conn;
@@ -44,7 +40,6 @@ public class SQLBridge {
     
     public synchronized void close() {
         if (conn != null) {
-        	plugin.getLogger().finest("sqlite connection needs to be closed");
             try {
                 conn.close();
             } catch (Exception e) {
@@ -55,7 +50,6 @@ public class SQLBridge {
     
     public boolean checkTable(String tableName) {
         DatabaseMetaData dbm;
-        plugin.getLogger().finest("Executing SQLite check for table "+tableName);
 
         try {
             dbm = getConnection().getMetaData();
@@ -94,7 +88,6 @@ public class SQLBridge {
 
     public ResultSet query(String query) {        
         ResultSet results = null;
-        plugin.getLogger().finest("Executing SQLite query "+query);
 
         try {
             statement = getConnection().createStatement();

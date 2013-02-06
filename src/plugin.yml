@@ -1,6 +1,6 @@
 name: SimpleSpawnLite-Core
 main: me.ellbristow.simplespawnlitecore.SimpleSpawnLiteCore
-version: 1.0.0
+version: 1.0.1
 database: true
 author: ellbristow
 dev-url: http://dev.bukkit.org/server-mods/simplespawnlitecore
@@ -10,9 +10,11 @@ commands:
   setspawn:
     description: Set spawn location
     usage: /setspawn [*default]
+    aliases: [ssetspawn]
   spawn:
     description: Teleport to spawn location
-    usage: /spawn [*default]
+    usage: /spawn [World Name|*default]
+    aliases: [sspawn]
 permissions:
   simplespawn.*:
     description: Access to all SimpleSpawn commands
@@ -22,6 +24,7 @@ permissions:
       simplespawn.use: true
       simplespawn.use.default: true
       simplespawn.use.world: true
+      simplespawn.home.*: true
   simplespawn.use.default:
     default: op
     description: Access to /spawn for new players location
