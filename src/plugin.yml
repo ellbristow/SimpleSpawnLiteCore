@@ -1,0 +1,39 @@
+name: SimpleSpawnLite-Core
+main: me.ellbristow.simplespawnlitecore.SimpleSpawnLiteCore
+version: 1.0.0
+database: true
+author: ellbristow
+dev-url: http://dev.bukkit.org/server-mods/simplespawnlitecore
+description: >
+             Platform for other SimpleSpawnLite plugins. Allows the setting of world spawn locations
+commands:
+  setspawn:
+    description: Set spawn location
+    usage: /setspawn [*default]
+  spawn:
+    description: Teleport to spawn location
+    usage: /spawn [*default]
+permissions:
+  simplespawn.*:
+    description: Access to all SimpleSpawn commands
+    children:
+      simplespawn.set: true
+      simplespawn.set.default: true
+      simplespawn.use: true
+      simplespawn.use.default: true
+      simplespawn.use.world: true
+  simplespawn.use.default:
+    default: op
+    description: Access to /spawn for new players location
+  simplespawn.set:
+    default: op
+    description: Access to /setspawn
+  simplespawn.set.default:
+    default: op
+    description: Access to /setspawn *default
+  simplespawn.use:
+    default: op
+    description: Access to /spawn
+  simplespawn.use.world:
+    default: op
+    description: Access to /spawn {worldName}
