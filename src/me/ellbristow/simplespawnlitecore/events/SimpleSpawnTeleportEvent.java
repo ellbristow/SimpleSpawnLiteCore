@@ -18,6 +18,7 @@ public class SimpleSpawnTeleportEvent extends Event implements Cancellable {
     private Player player;
     
     public SimpleSpawnTeleportEvent(Player player, LocationType locationType, Location fromLoc, Location toLoc) {
+        this.player = player;
         this.type = locationType;
         this.fromLoc = fromLoc;
         this.toLoc = toLoc;
