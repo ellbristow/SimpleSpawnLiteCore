@@ -1,5 +1,6 @@
 package me.ellbristow.simplespawnlitecore.listeners;
 
+import me.ellbristow.simplespawnlitecore.LocationType;
 import me.ellbristow.simplespawnlitecore.SimpleSpawnLiteCore;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -22,7 +23,7 @@ public class PlayerListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         final Player player = event.getPlayer();
         if (!player.hasPlayedBefore()) {
-            plugin.simpleTeleport(player, plugin.getDefaultSpawn());
+            plugin.simpleTeleport(player, plugin.getDefaultSpawn(), LocationType.DEFAULT_SPAWN);
         }
     }
 
@@ -42,7 +43,7 @@ public class PlayerListener implements Listener {
             
             event.setCancelled(true);
 
-            plugin.simpleTeleport(player, toLoc);
+            plugin.simpleTeleport(player, toLoc, LocationType.OTHER);
             
         }
     }

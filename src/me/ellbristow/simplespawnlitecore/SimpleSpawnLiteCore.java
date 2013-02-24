@@ -74,7 +74,7 @@ public class SimpleSpawnLiteCore extends JavaPlugin {
                     player.sendMessage(ChatColor.RED + "You do not have permission to use that command!");
                     return false;
                 }
-                simpleTeleport(player, getWorldSpawn(player.getWorld().getName()));
+                simpleTeleport(player, getWorldSpawn(player.getWorld().getName()), LocationType.WORLD_SPAWN);
                 return true;
             } else if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("*default")) {
@@ -82,7 +82,7 @@ public class SimpleSpawnLiteCore extends JavaPlugin {
                         player.sendMessage(ChatColor.RED + "You do not have permission to use that command!");
                         return false;
                     }
-                    simpleTeleport(player, getDefaultSpawn());
+                    simpleTeleport(player, getDefaultSpawn(), LocationType.DEFAULT_SPAWN);
                     return true;
                 }
 
@@ -95,7 +95,7 @@ public class SimpleSpawnLiteCore extends JavaPlugin {
                     player.sendMessage(ChatColor.RED + "World '" + ChatColor.WHITE + args[0] + ChatColor.RED + "' not found!");
                     return false;
                 }
-                simpleTeleport(player, getWorldSpawn(world.getName()));
+                simpleTeleport(player, getWorldSpawn(world.getName()), LocationType.WORLD_SPAWN);
                 return true;
             } else {
                 player.sendMessage(ChatColor.RED + "Command not recognised!");
@@ -107,14 +107,14 @@ public class SimpleSpawnLiteCore extends JavaPlugin {
         return false;
     }
     
-    public void simpleTeleport(final Player player, final Location loc) {
+    public void simpleTeleport(final Player player, final Location loc, LocationType type) {
         if (loc == null) {
             return;
         }
         
         Location fromLoc = player.getLocation();
         
-        SimpleSpawnTeleportEvent e = new SimpleSpawnTeleportEvent(player, LocationType.WORLD_SPAWN, fromLoc, loc);
+        SimpleSpawnTeleportEvent e = new SimpleSpawnTeleportEvent(player, type, fromLoc, loc);
         getServer().getPluginManager().callEvent(e);
         
         if (e.isCancelled()) return;
